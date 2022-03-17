@@ -14,27 +14,21 @@ namespace asteroidalert.Controllers
     [Route("[controller]")]
     public class AlertAsteroidController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<AlertAsteroidController> _logger;
-        private readonly NearEarthObjectBusiness _nearEarthObjectBusines;
+        private readonly INearEarthObjectBusiness _nearEarthObjectBusines;
 
-        public AlertAsteroidController(ILogger<AlertAsteroidController> logger)
+        public AlertAsteroidController(ILogger<AlertAsteroidController> logger, INearEarthObjectBusiness nearEarthObjectBusiness)
         {
             _logger = logger;
-            
-            IRepositoryNearEarthObjects repositoryNearEarthObjects = new NasaNeoWs(new JsonDeserializer());
-            _nearEarthObjectBusines = new NearEarthObjectBusiness(repositoryNearEarthObjects);
-
+            _nearEarthObjectBusines = nearEarthObjectBusiness;
         }
 
         [HttpGet]
         [Route("Alert")]
         public IEnumerable<AlertAsteroid> Alert(ushort days)
         {
+            _logger.LogInformation($"{days}");
+
             return _nearEarthObjectBusines.Alert(days);
         }
 
@@ -42,6 +36,8 @@ namespace asteroidalert.Controllers
         [Route("Warning")]
         public IEnumerable<AlertAsteroid> Warning(ushort days)
         {
+            _logger.LogInformation($"{days}");
+
             return _nearEarthObjectBusines.Warning(days);
         }
 

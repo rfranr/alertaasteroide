@@ -7,14 +7,8 @@ using System.Threading.Tasks;
 namespace asteroidalert.Business
 {
 
-    public class NearEarthObject
-    {
-        public DateTime start_date { get; set; }
-        public DateTime end_date { get; set; }
-    }
 
-
-    public class NearEarthObjectBusiness
+    public class NearEarthObjectBusiness : INearEarthObjectBusiness
     {
         private readonly IRepositoryNearEarthObjects _nearEarthObjects;
         private readonly int _showOnly = 3;
@@ -35,10 +29,10 @@ namespace asteroidalert.Business
         {
             IEnumerable<IQueryNearEarthObjects> nearObjectsData = _nearEarthObjects.Get(DateTime.Now, DateTime.Now.AddDays(days));
 
-            return Project ( Query(nearObjectsData, false, _showOnly) );
+            return Project(Query(nearObjectsData, false, _showOnly));
         }
 
-        private IList<IQueryNearEarthObjects> Query (IEnumerable<IQueryNearEarthObjects> nearObjectsData, bool ishazardous, int take)
+        private IList<IQueryNearEarthObjects> Query(IEnumerable<IQueryNearEarthObjects> nearObjectsData, bool ishazardous, int take)
         {
             return nearObjectsData
                 .Where(x => x.is_potentially_hazardous_asteroid == ishazardous)
@@ -47,7 +41,7 @@ namespace asteroidalert.Business
                 .ToList();
         }
 
-        private IList<AlertAsteroid> Project ( IList<IQueryNearEarthObjects> query)
+        private IList<AlertAsteroid> Project(IList<IQueryNearEarthObjects> query)
         {
             return query
                 .Select(s => new AlertAsteroid()
