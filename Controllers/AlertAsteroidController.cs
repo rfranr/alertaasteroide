@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using asteroidalert.Business;
+using asteroidalert.Infrastructure;
+using asteroidalert.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,23 +20,30 @@ namespace asteroidalert.Controllers
         };
 
         private readonly ILogger<AlertAsteroidController> _logger;
+        private readonly NearEarthObjectBusiness _nearEarthObjectBusines;
 
         public AlertAsteroidController(ILogger<AlertAsteroidController> logger)
         {
             _logger = logger;
+            
+            IRepositoryNearEarthObjects repositoryNearEarthObjects = new NasaNeoWs(new JsonDeserializer());
+            _nearEarthObjectBusines = new NearEarthObjectBusiness(repositoryNearEarthObjects);
+
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [Route("Alert")]
+        public IEnumerable<AlertAsteroid> Alert(ushort days)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return _nearEarthObjectBusines.Alert(days);
         }
+
+        [HttpGet]
+        [Route("Warning")]
+        public IEnumerable<AlertAsteroid> Warning(ushort days)
+        {
+            return _nearEarthObjectBusines.Warning(days);
+        }
+
     }
 }
