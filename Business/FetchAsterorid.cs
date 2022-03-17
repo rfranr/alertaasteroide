@@ -1,4 +1,5 @@
-﻿using System;
+﻿using asteroidalert.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,23 +13,22 @@ namespace asteroidalert.Business
         public DateTime end_date { get; set; }
     }
 
-    public interface IRepository
-    {
-
-    }
 
     public class NearEarthObjectBusiness
     {
+        private readonly IRepositoryNearEarthObjects _nearEarthObjects;
 
-        IRepository nearEarthObject;
-
-        public void NearEarthObject(NearEarthObject NearEarthObject)
+        public NearEarthObjectBusiness(IRepositoryNearEarthObjects nearEarthObjects)
         {
-            //NearEarthObject.end_date;
-            //NearEarthObject.start_date;
+            _nearEarthObjects = nearEarthObjects;
+        }
 
-
+        public void Alert(ushort days)
+        {
+            //var nearObjectsData = _nearEarthObjects.Feed(DateTime.Now, DateTime.Now.AddDays(days));
 
         }
+
+
     }
 }
