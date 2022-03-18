@@ -6,19 +6,22 @@ using Xunit;
 
 namespace XUnitTestProject
 {
-    public class UnitTestBusinessLayer
+    public class UnitTestRepository
     {
 
         [Fact]
-        public void TestFetchAsteroid_When_Sort_Expect_Dynamic()
+        public void TestFetchAsteroid_When_Sort_Expect_Response()
         {
             IRepositoryNearEarthObjects repositoryNearEarthObjects = new NasaNeoWs(new JsonDeserializer());
 
             var nearEarthObjectBusiness = new NearEarthObjectBusiness(repositoryNearEarthObjects);
 
-            var response = nearEarthObjectBusiness.Alert(7);
+            var response = nearEarthObjectBusiness.Alert(1);
 
-            Assert.Equal("bar", response[0].Nombre);
+            Assert.NotEmpty(response[0].Nombre);
         }
+
+
+
     }
 }
